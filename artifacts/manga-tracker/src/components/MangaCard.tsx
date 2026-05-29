@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { MangaItem } from '@workspace/api-client-react';
 import { BookOpen, ExternalLink } from 'lucide-react';
-import { Card } from '@/components/ui/card';
 
 interface MangaCardProps {
   manga: MangaItem;
@@ -11,61 +10,51 @@ export function MangaCard({ manga }: MangaCardProps) {
   const [imgError, setImgError] = useState(false);
 
   return (
-    <Card className="group relative overflow-hidden flex flex-col bg-card border-card-border hover:border-primary/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgb(0,0,0,0.4)] hover:shadow-primary/20">
-      <div className="aspect-[3/4] w-full overflow-hidden bg-muted relative">
+    <a
+      href={manga.url ?? undefined}
+      target="_blank"
+      rel="noopener noreferrer"
+      data-testid={`card-manga-${manga.id}`}
+      className="group relative flex flex-col rounded-xl overflow-hidden bg-card border border-card-border hover:border-primary/60 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_16px_40px_rgba(0,0,0,0.5)] hover:shadow-primary/15 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+    >
+      <div className="aspect-[2/3] w-full overflow-hidden bg-secondary relative">
         {manga.image && !imgError ? (
           <img
             src={manga.image}
             alt={manga.title}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
             onError={() => setImgError(true)}
             loading="lazy"
           />
         ) : (
-          <div className="w-full h-full flex flex-col items-center justify-center text-muted-foreground bg-secondary/50">
-            <BookOpen className="w-12 h-12 mb-2 opacity-50" />
-            <span className="text-xs font-medium uppercase tracking-wider">No Cover</span>
+          <div className="w-full h-full flex flex-col items-center justify-center text-muted-foreground bg-secondary">
+            <BookOpen className="w-10 h-10 mb-2 opacity-30" />
+            <span className="text-xs font-medium uppercase tracking-widest opacity-40">No Cover</span>
           </div>
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-300" />
-      </div>
-      
-      <div className="p-4 flex flex-col flex-1 z-10 -mt-10 relative">
-        <h3 className="font-semibold text-foreground line-clamp-2 leading-tight drop-shadow-md mb-2">
-          {manga.title}
-        </h3>
-        <div className="mt-auto pt-4 flex items-center justify-between">
-          {manga.url ? (
-            <a
-              href={manga.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:text-primary/80 transition-colors"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <span>View details</span>
-              <ExternalLink className="w-3.5 h-3.5" />
-            </a>
-          ) : (
-            <span className="text-xs text-muted-foreground">No URL</span>
-          )}
+
+        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
+
+        <div className="absolute bottom-0 left-0 right-0 p-3 translate-y-0 group-hover:translate-y-0 transition-transform duration-300">
+          <p className="text-white text-sm font-semibold line-clamp-2 leading-snug drop-shadow-lg">
+            {manga.title}
+          </p>
+        </div>
+
+        <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+          <div className="w-7 h-7 rounded-full bg-primary/90 flex items-center justify-center shadow-lg">
+            <ExternalLink className="w-3.5 h-3.5 text-white" />
+          </div>
         </div>
       </div>
-    </Card>
+    </a>
   );
 }
 
 export function MangaCardSkeleton() {
   return (
-    <Card className="overflow-hidden flex flex-col bg-card border-card-border animate-pulse">
-      <div className="aspect-[3/4] w-full bg-secondary/50"></div>
-      <div className="p-4 flex flex-col flex-1 gap-2">
-        <div className="h-5 bg-secondary/50 rounded w-3/4"></div>
-        <div className="h-5 bg-secondary/50 rounded w-1/2"></div>
-        <div className="mt-auto pt-4">
-          <div className="h-4 bg-secondary/50 rounded w-1/3"></div>
-        </div>
-      </div>
-    </Card>
+    <div className="rounded-xl overflow-hidden bg-card border border-card-border animate-pulse">
+      <div className="aspect-[2/3] w-full bg-secondary/60" />
+    </div>
   );
 }
